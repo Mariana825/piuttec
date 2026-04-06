@@ -1,0 +1,115 @@
+﻿@model object
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <h2>Panel Admin</h2>
+
+    <hr />
+    <h4>Registrar Usuario</h4>
+    <form method="post" asp-action="RegistrarUsuario">
+        <input type="text" name="nombre" placeholder="Nombre" required />
+        <input type="email" name="correo" placeholder="Correo" required />
+        <select name="rol" required>
+            <option value="Alumno">Alumno</option>
+            <option value="Docente">Docente</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <input type="text" name="contrasena" placeholder="Contraseña" required />
+        <button class="btn btn-primary">Registrar</button>
+    </form>
+
+    <hr />
+    <h4>Registrar Materia</h4>
+    <form method="post" asp-action="RegistrarMateria">
+        <input type="text" name="nombre" placeholder="Nombre Materia" required />
+        <button class="btn btn-primary">Registrar</button>
+    </form>
+
+    <hr />
+    <h4>Registrar Grupo</h4>
+    <form method="post" asp-action="RegistrarGrupo">
+        <input type="text" name="nombre" placeholder="Nombre Grupo" required />
+        <button class="btn btn-primary">Registrar</button>
+    </form>
+
+    <hr />
+    <h4>Asignar Alumno a Grupo</h4>
+    <form method="post" asp-action="AsignarAlumnoGrupo">
+        <select name="alumnoId">
+            @foreach (var a in ViewBag.Alumnos)
+            {
+                <option value="@a.Id">@a.Nombre</option>
+            }
+        </select>
+        <select name="grupoId">
+            @foreach (var g in ViewBag.Grupos)
+            {
+                <option value="@g.Id">@g.Nombre</option>
+            }
+        </select>
+        <button class="btn btn-primary">Asignar</button>
+    </form>
+    <hr />
+    <h4>Asignar Materia a Alumno</h4>
+
+    <form method="post" asp-action="AsignarMateriaAlumno">
+        <select name="alumnoId">
+            @foreach (var a in ViewBag.Alumnos)
+            {
+                <option value="@a.Id">@a.Nombre</option>
+            }
+        </select>
+
+        <select name="materiaId">
+            @foreach (var m in ViewBag.Materias)
+            {
+                <option value="@m.Id">@m.Nombre</option>
+            }
+        </select>
+
+        <button class="btn btn-primary">Asignar</button>
+    </form>
+
+    <hr />
+    <h4>Asignar Docente a Materia</h4>
+    <form method="post" asp-action="AsignarDocenteMateria">
+        <select name="docenteId">
+            @foreach (var d in ViewBag.Docentes)
+            {
+                <option value="@d.Id">@d.Nombre</option>
+            }
+        </select>
+        <select name="materiaId">
+            @foreach (var m in ViewBag.Materias)
+            {
+                <option value="@m.Id">@m.Nombre</option>
+            }
+        </select>
+        <button class="btn btn-primary">Asignar</button>
+    </form>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in ViewBag.Usuarios)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.Nombre</td>
+                    <td>@u.Rol</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" href="/Admin/EditarUsuario/@u.Id">Editar</a>
+                        <a class="btn btn-danger btn-sm" href="/Admin/EliminarUsuario/@u.Id">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

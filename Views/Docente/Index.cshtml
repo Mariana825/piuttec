@@ -1,0 +1,73 @@
+﻿@model piuttec.Models.DocenteViewModel
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+
+    <h2>Bienvenido, @Model.Nombre</h2>
+
+    <h4>Materias a cargo:</h4>
+    <ul class="list-group mb-4">
+        @foreach (var materia in ViewBag.Materias)
+        {
+            <li class="list-group-item">@materia.Nombre</li>
+        }
+    </ul>
+
+    <h4>Registrar calificaciones:</h4>
+
+    @foreach (var materia in ViewBag.Materias)
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>@materia.Nombre</strong>
+            </div>
+
+            <div class="card-body">
+                <form method="post" asp-action="RegistrarCalificacion">
+
+                    <input type="hidden" name="MateriaId" value="@materia.Id" />
+                    <input type="hidden" name="DocenteId" value="@ViewBag.DocenteId" />
+
+                    <!-- SELECT ALUMNOS -->
+                    <div class="mb-3">
+                        <label>Alumno</label>
+                        <select name="AlumnoId" class="form-select">
+
+                            @foreach (var c in ViewBag.AlumnosPorMateria)
+                            {
+                                if (c.MateriaId == materia.Id)
+                                {
+                                    <option value="@c.AlumnoId">
+                                        @c.Alumno.Nombre
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+
+                    <!-- CALIFICACIONES -->
+                    <div class="row g-2">
+                        <div class="col">
+                            <input type="number" step="0.01" name="Parcial1" class="form-control" placeholder="P1" />
+                        </div>
+                        <div class="col">
+                            <input type="number" step="0.01" name="Parcial2" class="form-control" placeholder="P2" />
+                        </div>
+                        <div class="col">
+                            <input type="number" step="0.01" name="Parcial3" class="form-control" placeholder="P3" />
+                        </div>
+                        <div class="col">
+                            <input type="number" step="0.01" name="Final" class="form-control" placeholder="Final" />
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary mt-3">Guardar</button>
+                </form>
+            </div>
+        </div>
+    }
+
+</div>

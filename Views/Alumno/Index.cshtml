@@ -1,0 +1,27 @@
+﻿@model AlumnoViewModel
+<h2>@Model.Nombre</h2>
+<p><strong>Grupo(s):</strong> @Model.Grupo</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Materia</th>
+            <th>P1</th>
+            <th>P2</th>
+            <th>P3</th>
+            <th>Final</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.Calificaciones)
+        {
+            <tr>
+                <td>@c.Materia?.Nombre</td>
+                <td>@c.Parcial1</td>
+                <td>@c.Parcial2</td>
+                <td>@c.Parcial3</td>
+                <td>@c.Final</td>
+            </tr>
+        }
+    </tbody>
+</table>

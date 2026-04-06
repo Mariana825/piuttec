@@ -1,0 +1,51 @@
+﻿CREATE DATABASE IF NOT EXISTS piuttec;
+USE piuttec;
+
+CREATE TABLE IF NOT EXISTS Usuario (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100),
+    Correo VARCHAR(100),
+    Rol VARCHAR(20),
+    Contrasena VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Grupo (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Materia (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS AlumnoGrupo (
+    AlumnoId INT,
+    GrupoId INT,
+    PRIMARY KEY(AlumnoId, GrupoId)
+);
+
+CREATE TABLE IF NOT EXISTS DocenteMateria (
+    DocenteId INT,
+    MateriaId INT,
+    PRIMARY KEY(DocenteId, MateriaId)
+);
+
+CREATE TABLE IF NOT EXISTS Calificacion (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    AlumnoId INT,
+    MateriaId INT,
+    DocenteId INT,
+    Parcial1 DOUBLE,
+    Parcial2 DOUBLE,
+    Parcial3 DOUBLE,
+    Final DOUBLE
+);
+
+-- Insert con contraseña
+INSERT INTO Usuario (Nombre, Correo, Rol, Contrasena) 
+VALUES ('Admin Prueba', 'admin@piuttec.com', 'Admin', '1234');
+INSERT INTO Usuario (Nombre, Correo, Rol, Contrasena) 
+VALUES ('Alumno Prueba', 'alumno@piuttec.com', 'Alumno', '1234');
+INSERT INTO Usuario (Nombre, Correo, Rol, Contrasena) 
+VALUES ('Docente Prueba', 'docente@piuttec.com', 'Docente', '1234');
