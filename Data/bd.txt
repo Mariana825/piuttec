@@ -49,3 +49,12 @@ INSERT INTO Usuario (Nombre, Correo, Rol, Contrasena)
 VALUES ('Alumno Prueba', 'alumno@piuttec.com', 'Alumno', '1234');
 INSERT INTO Usuario (Nombre, Correo, Rol, Contrasena) 
 VALUES ('Docente Prueba', 'docente@piuttec.com', 'Docente', '1234');
+
+--Cambiar de longitud el varchar de contraseña
+ALTER TABLE usuario
+MODIFY contrasena VARCHAR(255);
+
+--Cambiar el texto plano de las contraseñas por el Hash(seguira siendo 1234)
+UPDATE usuario SET contrasena='$2a$10$YC/9YKx1ypxsea8EfWFKOuGHpErMqwkcMauTojYhx7dWoYgJ/.SSW' WHERE correo = 'admin@piuttec.com';
+UPDATE usuario SET contrasena='$2a$10$YC/9YKx1ypxsea8EfWFKOuGHpErMqwkcMauTojYhx7dWoYgJ/.SSW' WHERE correo = 'alumno@piuttec.com';
+UPDATE usuario SET contrasena='$2a$10$YC/9YKx1ypxsea8EfWFKOuGHpErMqwkcMauTojYhx7dWoYgJ/.SSW' WHERE correo = 'docente@piuttec.com';
