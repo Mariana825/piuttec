@@ -75,5 +75,10 @@ namespace piuttec.Controllers
             // Retornar la vista con los datos
             return View(viewModel);
         }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // elimina sesión
+            return Redirect("/Login");   // redirige directo
+        }
     }
 }

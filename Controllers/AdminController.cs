@@ -15,6 +15,12 @@ namespace piuttec.Controllers
             return HttpContext.Session.GetString("Rol") == "Admin";
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // elimina sesión
+            return Redirect("/Login");   // redirige directo
+        }
+
         public IActionResult Index()
         {
             if (!EsAdmin())

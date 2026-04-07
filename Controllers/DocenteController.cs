@@ -21,7 +21,7 @@ namespace piuttec.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             var rol = HttpContext.Session.GetString("Rol");
 
-            //Validación de acceso
+            // Validación de acceso
             if (userId == null || rol != "Docente")
                 return RedirectToAction("Index", "Login");
 
@@ -38,7 +38,7 @@ namespace piuttec.Controllers
                 .Select(dm => dm.Materia)
                 .ToList();
 
-            // Alumnos por materia (desde calificaciones)
+            // Alumnos por materia
             var alumnosPorMateria = _context.Calificaciones
                 .Include(c => c.Alumno)
                 .Include(c => c.Materia)
@@ -62,9 +62,9 @@ namespace piuttec.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarCalificacion(
             int AlumnoId, int MateriaId,
-            double Parcial1, double Parcial2, double Parcial3, double Final)
+            double? Parcial1, double? Parcial2, double? Parcial3, double? Final)
         {
-            // Obtener docente REAL desde sesión (NO confiar en el formulario)
+            // Obtener docente REAL desde sesión
             var userId = HttpContext.Session.GetInt32("UserId");
             var rol = HttpContext.Session.GetString("Rol");
 
@@ -79,13 +79,6 @@ namespace piuttec.Controllers
                 .AnyAsync(dm => dm.DocenteId == docenteId && dm.MateriaId == MateriaId);
 
             if (!docenteMateria)
-                return RedirectToAction("Index"); // evita manipulación
-
-            // Validar que el alumno pertenece a esa materia
-            var alumnoMateria = await _context.Calificaciones
-                .AnyAsync(c => c.AlumnoId == AlumnoId && c.MateriaId == MateriaId);
-
-            if (!alumnoMateria)
                 return RedirectToAction("Index");
 
             // Buscar si ya existe calificación
@@ -99,31 +92,46 @@ namespace piuttec.Controllers
                 {
                     AlumnoId = AlumnoId,
                     MateriaId = MateriaId,
-                    DocenteId = docenteId, // 🔐 SIEMPRE desde sesión
-                    Parcial1 = Parcial1,
-                    Parcial2 = Parcial2,
-                    Parcial3 = Parcial3,
-                    Final = Final
+                    DocenteId = docenteId,
+
+                    // Si no mandan valor → se queda en 0 (por defecto)
+                    Parcial1 = Parcial1 ?? 0,
+                    Parcial2 = Parcial2 ?? 0,
+                    Parcial3 = Parcial3 ?? 0,
+                    Final = Final ?? 0
                 };
 
                 _context.Calificaciones.Add(cal);
             }
             else
             {
-                // Actualizar existente
-                cal.Parcial1 = Parcial1;
-                cal.Parcial2 = Parcial2;
-                cal.Parcial3 = Parcial3;
-                cal.Final = Final;
+                // 🔥 SOLO actualizar si el valor viene (NO sobreescribe con 0)
+                if (Parcial1.HasValue)
+                    cal.Parcial1 = Parcial1.Value;
 
-                //Refuerza que el docente correcto es el que modifica
+                if (Parcial2.HasValue)
+                    cal.Parcial2 = Parcial2.Value;
+
+                if (Parcial3.HasValue)
+                    cal.Parcial3 = Parcial3.Value;
+
+                if (Final.HasValue)
+                    cal.Final = Final.Value;
+
+                // Refuerza que el docente correcto sea el que modifica
                 cal.DocenteId = docenteId;
             }
 
             await _context.SaveChangesAsync();
 
-            // Redirección segura (sin ID en URL)
             return RedirectToAction("Index");
+        }
+
+        // 🔐 Cerrar sesión
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); // elimina sesión
+            return Redirect("/Login");
         }
     }
 }
